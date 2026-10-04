@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, ReactNode } from 'react';
-import { Student, AcquisitionChannel, GrowthMetrics } from '../types';
-import { INITIAL_STUDENTS } from '../data/seedData';
+import { Student, AcquisitionChannel, GrowthMetrics, CampusStats } from '../types';
+import { INITIAL_STUDENTS, POPULAR_COLLEGES } from '../data/seedData';
 
 interface RegisterInput {
   fullName: string;
@@ -11,6 +11,7 @@ interface RegisterInput {
   yearOfStudy: string;
   referralCode?: string;
   acquisitionChannel?: AcquisitionChannel;
+  selectedProject?: string;
 }
 
 interface RegisterResult {
@@ -33,6 +34,9 @@ interface GrowthContextType {
   getReferredStudents: (referralCode: string) => Student[];
   metrics: GrowthMetrics;
   getStudentRank: (id: string) => number;
+  updateBuilderProgress: (updates: { selectedProject?: string; workshopStarted?: boolean; workshopCompleted?: boolean }) => void;
+  getCampusLeaderboard: () => CampusStats[];
+  getCampusStats: (collegeName?: string) => CampusStats;
 }
 
 const STORAGE_KEY = 'ai60_growth_students_v4';
@@ -158,6 +162,9 @@ export const GrowthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       registeredAt: new Date().toISOString(),
       acquisitionChannel: channel,
       status: 'confirmed',
+      selectedProject: input.selectedProject || 'resume-analyzer',
+      workshopStarted: false,
+      workshopCompleted: false,
     };
 
     setStudents(prev => {
@@ -344,6 +351,59 @@ export const GrowthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     };
   }, [students]);
 
+  const updateBuilderProgress = (updates: { selectedProject?: string; workshopStarted?: boolean; workshopCompleted?: boolean }) => {
+    if (!currentStudentId) return;
+    setStudents(prev => prev.map(s => {
+      if (s.id === currentStudentId) {
+        return {
+          ...s,
+          ...updates,
+        };
+      }
+      return s;
+    }));
+  };
+
+  const campusBaselines: Record<string, number> = {
+    'Amrita Vishwa Vidyapeetham – Bengaluru': 80,
+    'RV College of Engineering – Bengaluru': 68,
+    'BMS College of Engineering – Bengaluru': 56,
+    'PES University – Bengaluru': 46,
+    'MS Ramaiah Institute of Technology – Bengaluru': 34,
+    'NITK Surathkal': 26,
+  };
+
+  const getCampusLeaderboard = (): CampusStats[] => {
+    const list = POPULAR_COLLEGES.map(name => {
+      const liveCount = students.filter(s => s.college === name).length;
+      const base = campusBaselines[name] || 25;
+      const count = base + liveCount;
+      return { name, count };
+    });
+
+    list.sort((a, b) => b.count - a.count);
+    const maxVal = Math.max(...list.map(l => l.count), 1);
+
+    return list.map((item, idx) => {
+      const nextItem = idx > 0 ? list[idx - 1] : null;
+      const neededForNextRank = nextItem ? (nextItem.count - item.count + 1) : 0;
+      return {
+        rank: idx + 1,
+        name: item.name,
+        count: item.count,
+        percent: Math.round((item.count / maxVal) * 100),
+        neededForNextRank,
+      };
+    });
+  };
+
+  const getCampusStats = (collegeName?: string): CampusStats => {
+    const board = getCampusLeaderboard();
+    const targetName = collegeName || currentStudent?.college || POPULAR_COLLEGES[0];
+    const found = board.find(c => c.name.toLowerCase() === targetName.toLowerCase());
+    return found || board[0];
+  };
+
   return (
     <GrowthContext.Provider
       value={{
@@ -360,6 +420,9 @@ export const GrowthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         getReferredStudents,
         metrics,
         getStudentRank,
+        updateBuilderProgress,
+        getCampusLeaderboard,
+        getCampusStats,
       }}
     >
       {children}

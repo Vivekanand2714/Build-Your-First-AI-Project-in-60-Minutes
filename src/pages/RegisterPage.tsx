@@ -126,6 +126,7 @@ export const RegisterPage: React.FC = () => {
       yearOfStudy: formData.yearOfStudy,
       referralCode: formData.referralCode.trim().toUpperCase() || undefined,
       acquisitionChannel: detectedChannel,
+      selectedProject: searchParams.get('project') || undefined,
     });
 
     setIsSubmitting(false);

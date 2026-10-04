@@ -11,10 +11,11 @@ export const Navbar: React.FC = () => {
   const rank = currentStudent ? getStudentRank(currentStudent.id) : null;
 
   const navLinks = [
-    { path: '/', label: 'Workshop' },
-    { path: '/#how-it-works', label: 'How It Works' },
+    { path: '/playground', label: 'AI Project Playground' },
+    { path: '/campus-challenge', label: 'Campus Challenge' },
+    { path: '/whatsapp-flow', label: 'WhatsApp Growth Flow' },
+    { path: '/workshop', label: '60-Minute Workshop' },
     { path: '/leaderboard', label: 'Leaderboard' },
-    { path: '/dashboard', label: 'Dashboard' },
     { path: '/admin', label: 'Growth Admin' },
   ];
 
@@ -61,27 +62,14 @@ export const Navbar: React.FC = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1">
             {navLinks.map((link) => {
               const isCurrent = isActive(link.path);
-              if (link.path.includes('#')) {
-                return (
-                  <a
-                    key={link.path}
-                    href={link.path}
-                    onClick={() => handleNavClick(link.path)}
-                    className="px-3.5 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 transition"
-                  >
-                    {link.label}
-                  </a>
-                );
-              }
-
               return (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition ${
+                  className={`px-2.5 xl:px-3 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition ${
                     isCurrent
                       ? 'text-emerald-600 bg-emerald-50/80 font-semibold'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
@@ -94,12 +82,12 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Right Action CTA */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             {currentStudent ? (
               <div className="flex items-center gap-2">
                 <Link
                   to="/dashboard"
-                  className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200/80 text-slate-900 text-xs font-semibold px-3.5 py-2 rounded-xl transition border border-slate-200 shadow-2xs"
+                  className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200/80 text-slate-900 text-xs font-semibold px-3 py-2 rounded-xl transition border border-slate-200 shadow-2xs"
                 >
                   <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                   <span>Dashboard ({currentStudent.fullName.split(' ')[0]})</span>
@@ -129,7 +117,7 @@ export const Navbar: React.FC = () => {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+            className="lg:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -139,7 +127,7 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-2 shadow-lg">
+        <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-2 shadow-lg">
           {navLinks.map((link) => (
             <Link
               key={link.path}

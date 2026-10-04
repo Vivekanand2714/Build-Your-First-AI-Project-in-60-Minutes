@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useGrowth } from '../context/GrowthContext';
-import { WORKSHOP_DETAILS } from '../data/seedData';
+import { WORKSHOP_DETAILS, PROJECT_BLUEPRINTS } from '../data/seedData';
 import confetti from 'canvas-confetti';
 import { 
   CheckCircle2, Copy, Check, Share2, Trophy, Users, Zap, 
   ArrowRight, MessageCircle, Sparkles, Award, Calendar, ExternalLink,
-  AlertCircle, Lock, Search
+  AlertCircle, Lock, Search, School, Code2, Cpu, CheckSquare, Square
 } from 'lucide-react';
 
 export const DashboardPage: React.FC = () => {
-  const { currentStudent, getStudentRank, getReferredStudents, simulateReferral, loginByEmailOrCode, setCurrentStudentId } = useGrowth();
+  const { 
+    currentStudent, getStudentRank, getReferredStudents, simulateReferral, 
+    loginByEmailOrCode, setCurrentStudentId, getCampusStats, updateBuilderProgress 
+  } = useGrowth();
 
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedCampusInvite, setCopiedCampusInvite] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
   // For unregistered visitor lookup
@@ -99,6 +103,30 @@ export const DashboardPage: React.FC = () => {
   const referredList = getReferredStudents(currentStudent.referralCode);
   const refCount = currentStudent.referralCount;
 
+  // Campus stats
+  const campusStats = getCampusStats(currentStudent.college);
+
+  // Selected project info
+  const selectedProjId = currentStudent.selectedProject || 'resume-analyzer';
+  const projectObj = PROJECT_BLUEPRINTS.find(p => p.id === selectedProjId) || PROJECT_BLUEPRINTS[0];
+
+  // AI Builder Milestones
+  const m1_registered = true;
+  const m2_selectedProject = !!currentStudent.selectedProject;
+  const m3_invitedClassmates = refCount > 0;
+  const m4_startedWorkshop = !!currentStudent.workshopStarted;
+  const m5_completedWorkshop = !!currentStudent.workshopCompleted;
+
+  const milestonesCompletedCount = [
+    m1_registered,
+    m2_selectedProject,
+    m3_invitedClassmates,
+    m4_startedWorkshop,
+    m5_completedWorkshop
+  ].filter(Boolean).length;
+
+  const builderProgressPercent = Math.round((milestonesCompletedCount / 5) * 100);
+
   const milestoneTarget = 5;
   const progressPercent = Math.min(100, Math.round((refCount / milestoneTarget) * 100));
 
@@ -118,6 +146,15 @@ export const DashboardPage: React.FC = () => {
 
   const shareText = `Join me in the free workshop "Build Your First AI Project in 60 Minutes"! We code and deploy a real AI app live. Register with my link: ${referralLink}`;
   const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+
+  const campusRallyMsg = `🚀 Help ${currentStudent.college} climb the campus leaderboard in "Build Your First AI Project in 60 Minutes"! We are currently Rank #${campusStats.rank}. Register with my referral link: ${referralLink}`;
+  const campusWhatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(campusRallyMsg)}`;
+
+  const handleCopyCampusInvite = () => {
+    navigator.clipboard.writeText(campusRallyMsg);
+    setCopiedCampusInvite(true);
+    setTimeout(() => setCopiedCampusInvite(false), 2500);
+  };
 
   const handleSimulate = () => {
     const res = simulateReferral(currentStudent.referralCode);
@@ -160,11 +197,11 @@ export const DashboardPage: React.FC = () => {
 
           <div className="flex flex-wrap items-center gap-3">
             <Link
-              to="/leaderboard"
+              to="/campus-challenge"
               className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl border border-slate-200 transition"
             >
-              <Trophy className="w-4 h-4 text-amber-500" />
-              <span>Campus Leaderboard</span>
+              <School className="w-4 h-4 text-emerald-600" />
+              <span>Campus Challenge (#{campusStats.rank})</span>
             </Link>
 
             {/* Evaluator Demo Tool button */}
@@ -189,6 +226,142 @@ export const DashboardPage: React.FC = () => {
             <span className="text-[10px] text-emerald-600 font-mono">Real-time update</span>
           </div>
         )}
+
+        {/* FEATURE 6 — AI BUILDER JOURNEY SECTION */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-7 shadow-xs space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                <Code2 className="w-5 h-5 text-emerald-600" />
+                <span>AI Builder Journey</span>
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Track your progress through registration, project blueprint selection, referral loop, and live build session.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-bold font-mono text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                {milestonesCompletedCount} / 5 milestones completed
+              </span>
+            </div>
+          </div>
+
+          {/* Builder Progress Bar */}
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs font-medium text-slate-600">
+              <span>Overall Builder Readiness</span>
+              <span className="font-mono text-emerald-600 font-bold">{builderProgressPercent}%</span>
+            </div>
+            <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200/80">
+              <div
+                className="h-full bg-emerald-600 rounded-full transition-all duration-500"
+                style={{ width: `${builderProgressPercent}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* 5 Milestones Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 pt-1">
+            
+            {/* Milestone 1 */}
+            <div className="p-3.5 rounded-xl border bg-emerald-50/60 border-emerald-200 text-xs space-y-1">
+              <div className="flex items-center gap-1.5 font-bold text-emerald-800">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>1. Registered</span>
+              </div>
+              <p className="text-[11px] text-emerald-700">Workshop seat confirmed</p>
+            </div>
+
+            {/* Milestone 2 */}
+            <div className={`p-3.5 rounded-xl border text-xs space-y-1 ${
+              m2_selectedProject ? 'bg-emerald-50/60 border-emerald-200' : 'bg-slate-50 border-slate-200'
+            }`}>
+              <div className="flex items-center gap-1.5 font-bold text-slate-800">
+                {m2_selectedProject ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                ) : (
+                  <span className="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center text-[10px] text-slate-400">○</span>
+                )}
+                <span>2. Selected Project</span>
+              </div>
+              <div className="text-[11px] text-slate-600 truncate">
+                {projectObj.title}
+              </div>
+              <Link to="/playground" className="text-[10px] text-emerald-600 font-semibold hover:underline block">
+                Change blueprint &rarr;
+              </Link>
+            </div>
+
+            {/* Milestone 3 */}
+            <div className={`p-3.5 rounded-xl border text-xs space-y-1 ${
+              m3_invitedClassmates ? 'bg-emerald-50/60 border-emerald-200' : 'bg-slate-50 border-slate-200'
+            }`}>
+              <div className="flex items-center gap-1.5 font-bold text-slate-800">
+                {m3_invitedClassmates ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                ) : (
+                  <span className="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center text-[10px] text-slate-400">○</span>
+                )}
+                <span>3. Invited Classmates</span>
+              </div>
+              <p className="text-[11px] text-slate-600">
+                {refCount > 0 ? `${refCount} classmate(s) joined` : '0 referrals yet'}
+              </p>
+              {!m3_invitedClassmates && (
+                <button
+                  onClick={handleSimulate}
+                  className="text-[10px] text-emerald-600 font-semibold hover:underline cursor-pointer text-left block"
+                >
+                  Simulate referral &rarr;
+                </button>
+              )}
+            </div>
+
+            {/* Milestone 4 */}
+            <div className={`p-3.5 rounded-xl border text-xs space-y-1 ${
+              m4_startedWorkshop ? 'bg-emerald-50/60 border-emerald-200' : 'bg-slate-50 border-slate-200'
+            }`}>
+              <div className="flex items-center gap-1.5 font-bold text-slate-800">
+                {m4_startedWorkshop ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                ) : (
+                  <span className="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center text-[10px] text-slate-400">○</span>
+                )}
+                <span>4. Started Workshop</span>
+              </div>
+              <p className="text-[11px] text-slate-600">
+                {m4_startedWorkshop ? 'Phase underway' : 'Not started yet'}
+              </p>
+              <Link to="/workshop" className="text-[10px] text-emerald-600 font-semibold hover:underline block">
+                Open workshop &rarr;
+              </Link>
+            </div>
+
+            {/* Milestone 5 */}
+            <div className={`p-3.5 rounded-xl border text-xs space-y-1 ${
+              m5_completedWorkshop ? 'bg-emerald-50/60 border-emerald-200' : 'bg-slate-50 border-slate-200'
+            }`}>
+              <div className="flex items-center gap-1.5 font-bold text-slate-800">
+                {m5_completedWorkshop ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                ) : (
+                  <span className="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center text-[10px] text-slate-400">○</span>
+                )}
+                <span>5. Completed Workshop</span>
+              </div>
+              <p className="text-[11px] text-slate-600">
+                {m5_completedWorkshop ? 'AI badge verified' : 'Final submission'}
+              </p>
+              {!m5_completedWorkshop && (
+                <Link to="/workshop" className="text-[10px] text-emerald-600 font-semibold hover:underline block">
+                  Complete in 60m &rarr;
+                </Link>
+              )}
+            </div>
+
+          </div>
+        </div>
 
         {/* 3 Core Metric Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -307,16 +480,16 @@ export const DashboardPage: React.FC = () => {
                   #{rank}
                 </span>
                 <span className="text-sm text-slate-500">
-                  Campus Position
+                  Student Rank
                 </span>
               </div>
 
               <div className="mt-5 p-3.5 bg-slate-50 rounded-xl border border-slate-200">
                 <h4 className="text-xs font-bold text-slate-800 mb-0.5">
-                  Growth Call to Action
+                  Campus Position
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  "Invite your classmates and move up the leaderboard."
+                  Your campus is currently <strong className="text-emerald-600 font-bold">Rank #{campusStats.rank}</strong> in the Campus Challenge.
                 </p>
               </div>
             </div>
@@ -332,6 +505,101 @@ export const DashboardPage: React.FC = () => {
             </div>
           </div>
 
+        </div>
+
+        {/* FEATURE 3 — RALLY YOUR COLLEGE SECTION */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div>
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <School className="w-5 h-5 text-emerald-600" />
+                <span>Rally Your College</span>
+              </h2>
+              <p className="text-xs text-slate-600 mt-0.5">
+                Your referrals help your campus climb the leaderboard.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono font-bold bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-200">
+                {currentStudent.college.split('–')[0].trim()} &bull; Rank #{campusStats.rank}
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* College Rank Card */}
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="text-[10px] font-mono text-slate-500 uppercase">Current Campus Rank</div>
+              <div className="text-2xl font-extrabold text-emerald-600 font-mono mt-1">
+                #{campusStats.rank}
+              </div>
+              <div className="text-xs text-slate-600 mt-1">
+                {campusStats.count} builders registered from {currentStudent.college.split('–')[0].trim()}
+              </div>
+            </div>
+
+            {/* Referrals Contributed */}
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="text-[10px] font-mono text-slate-500 uppercase">Your Campus Contribution</div>
+              <div className="text-2xl font-extrabold text-slate-900 font-mono mt-1">
+                {refCount}
+              </div>
+              <div className="text-xs text-slate-600 mt-1">
+                Direct peer referrals added to your college total
+              </div>
+            </div>
+
+            {/* Needed for next rank */}
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="text-[10px] font-mono text-slate-500 uppercase">Target Ahead</div>
+              <div className="text-2xl font-extrabold text-slate-900 font-mono mt-1">
+                {campusStats.rank === 1 ? 'Rank #1' : `+${campusStats.neededForNextRank}`}
+              </div>
+              <div className="text-xs text-slate-600 mt-1">
+                {campusStats.rank === 1 
+                  ? 'Leading the inter-college sprint!' 
+                  : `Registrations needed to reach Rank #${campusStats.rank - 1}`}
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+            <a
+              href={campusWhatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-5 rounded-xl transition shadow-xs"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>Share on WhatsApp</span>
+            </a>
+
+            <button
+              onClick={handleCopyCampusInvite}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs py-2.5 px-4 rounded-xl border border-slate-200 transition cursor-pointer"
+            >
+              {copiedCampusInvite ? (
+                <>
+                  <Check className="w-4 h-4 text-emerald-600" />
+                  <span>Referral Link Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4" />
+                  <span>Copy Referral Link</span>
+                </>
+              )}
+            </button>
+
+            <Link
+              to="/campus-challenge"
+              className="w-full sm:w-auto ml-auto text-center text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:underline py-2"
+            >
+              View Full Campus Challenge &rarr;
+            </Link>
+          </div>
         </div>
 
         {/* Referred Classmates Table */}
@@ -431,10 +699,10 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           <Link
-            to="/leaderboard"
+            to="/workshop"
             className="shrink-0 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs px-5 py-3 rounded-xl transition shadow-xs flex items-center gap-2"
           >
-            <span>See Campus Leaderboard</span>
+            <span>Launch 60-Minute Workshop</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

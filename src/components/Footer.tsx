@@ -30,13 +30,16 @@ export const Footer: React.FC = () => {
             <h4 className="text-slate-900 font-semibold text-sm mb-3">Platform Navigation</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="hover:text-slate-900 transition">Workshop Details</Link>
+                <Link to="/playground" className="hover:text-slate-900 transition">AI Project Playground</Link>
               </li>
               <li>
-                <Link to="/register" className="hover:text-slate-900 transition">Student Registration</Link>
+                <Link to="/campus-challenge" className="hover:text-slate-900 transition">Campus Challenge</Link>
               </li>
               <li>
-                <Link to="/dashboard" className="hover:text-slate-900 transition">Student Referral Dashboard</Link>
+                <Link to="/whatsapp-flow" className="hover:text-slate-900 transition">WhatsApp Growth Flow</Link>
+              </li>
+              <li>
+                <Link to="/workshop" className="hover:text-slate-900 transition">60-Minute Workshop</Link>
               </li>
               <li>
                 <Link to="/leaderboard" className="hover:text-slate-900 transition">Campus Leaderboard</Link>

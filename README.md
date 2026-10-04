@@ -171,25 +171,26 @@ Follow these steps for a realistic 3-minute video presentation:
 ├── vite.config.ts                   # Vite configuration with React and Tailwind
 ├── src/
 │   ├── main.tsx                     # React DOM mount point
-│   ├── App.tsx                      # Root component with routing and providers
+│   ├── App.tsx                      # Root component with 9 routes and providers
 │   ├── index.css                    # Tailwind CSS imports & custom styles
-│   ├── types/
-│   │   └── index.ts                 # TypeScript definitions (Student, Metrics, etc.)
-│   ├── data/
-│   │   └── seedData.ts              # Realistic initial campus seed data
-│   ├── context/
-│   │   └── GrowthContext.tsx        # Session state, referral logic, anti-abuse
+│   ├── types/                       # TypeScript definitions (Student, Metrics, CampusStats, etc.)
+│   ├── data/                        # Seed data & 4 project blueprints
+│   ├── context/                     # Session state, campus rankings, referral tracking
 │   ├── components/
-│   │   ├── Navbar.tsx               # Realistic navigation bar with session state
-│   │   ├── Footer.tsx               # Footer with compliance statement & links
+│   │   ├── Navbar.tsx               # Responsive navbar with active routes & student state
+│   │   ├── Footer.tsx               # Compliance statement & comprehensive navigation
 │   │   └── DemoControlsModal.tsx    # Discreet floating evaluator modal
 │   └── pages/
 │       ├── LandingPage.tsx          # Workshop hero, timeline, benefits, FAQ
 │       ├── RegisterPage.tsx         # Student form, validation, referral detection
 │       ├── SuccessPage.tsx          # Confirmation, unique code, WhatsApp share
-│       ├── DashboardPage.tsx        # Personalized student referral dashboard
-│       ├── LeaderboardPage.tsx      # Campus leaderboard with top 3 podium & (You) badge
-│       └── AdminPage.tsx            # Growth analytics, demo controls & URL generator
+│       ├── DashboardPage.tsx        # AI Builder Journey & "Rally Your College" section
+│       ├── LeaderboardPage.tsx      # Individual student rankings with top 3 podium & (You) badge
+│       ├── PlaygroundPage.tsx       # /playground: 4 interactive 60-min project blueprints
+│       ├── CampusChallengePage.tsx  # /campus-challenge: Inter-college league & sharing panel
+│       ├── WhatsAppFlowPage.tsx     # /whatsapp-flow: 5-stage simulated lifecycle & player
+│       ├── WorkshopPage.tsx         # /workshop: 60-minute interactive build journey with timer
+│       └── AdminPage.tsx            # /admin: 5 KPI cards, Campus Performance, & Growth Funnel
 ```
 
 ---

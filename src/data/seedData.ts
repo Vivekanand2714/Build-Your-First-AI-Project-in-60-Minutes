@@ -254,3 +254,86 @@ export const YEARS_OF_STUDY = [
   'Pre-Final Year (3rd Year)',
   'Recent Engineering Graduate',
 ];
+
+export const PROJECT_BLUEPRINTS = [
+  {
+    id: 'resume-analyzer',
+    title: 'AI Resume Analyzer',
+    tagline: 'LLM-Powered Role Matcher',
+    problem: 'Analyze a student\'s resume against a target job role and identify critical skill gaps.',
+    targetOutcome: 'A functional tool that parses resume text, benchmarks against job descriptions, and gives actionable recommendations.',
+    aiComponent: 'LLM-powered semantic parsing, prompt engineering, and structured JSON scoring.',
+    journey: [
+      'Define input: Accept PDF/text resume and target job role parameters',
+      'Design prompt: Engineer systemic evaluation criteria with score weights',
+      'Connect AI: Run structured prompt evaluation with zero-shot validation',
+      'Test output: Benchmark against sample tech resumes and refine edge scoring',
+      'Prepare final project: Format actionable feedback report with copyable insights',
+    ],
+    estimatedTime: '60-Minute Blueprint',
+    difficulty: 'Intermediate',
+    tags: ['LLMs', 'Prompt Engineering', 'Career Tech'],
+    sampleInput: 'B.Tech CSE student resume applying for Junior Full-Stack Developer role.',
+    sampleOutput: 'Match Score: 88/100 | Strong React & Node.js coverage | Recommended addition: System Design & Docker project highlights.'
+  },
+  {
+    id: 'ai-chatbot',
+    title: 'AI Chatbot',
+    tagline: 'Contextual Knowledge Assistant',
+    problem: 'Build a contextual AI assistant capable of answering questions from college syllabus documents.',
+    targetOutcome: 'An interactive conversational bot with stateful chat history and contextual awareness.',
+    aiComponent: 'Context-conditioned LLM prompt chaining and conversational state management.',
+    journey: [
+      'Define input: Ingest custom college course syllabus or FAQ dataset',
+      'Design prompt: Define assistant persona, tone boundaries, and fallback rules',
+      'Connect AI: Connect interactive messaging interface with stateful history',
+      'Test output: Stress-test conversational edge cases and ambiguous queries',
+      'Prepare final project: Deploy responsive web chat widget with session memory',
+    ],
+    estimatedTime: '60-Minute Blueprint',
+    difficulty: 'Beginner Friendly',
+    tags: ['Conversational AI', 'RAG / Context', 'Assistants'],
+    sampleInput: 'Student query: "What are the prerequisite topics for the AI workshop project?"',
+    sampleOutput: 'Assistant: "The workshop is designed for final-year students with basic Python or web concepts. No prior machine learning experience is required!"'
+  },
+  {
+    id: 'performance-predictor',
+    title: 'Student Performance Predictor',
+    tagline: 'Feature-Based ML Risk Model',
+    problem: 'Predict semester performance risks based on attendance, lab submissions, and quiz metrics.',
+    targetOutcome: 'An early-warning academic indicator dashboard identifying topics where students need support.',
+    aiComponent: 'Regression/Classification heuristics with feature weighting and confidence intervals.',
+    journey: [
+      'Define input: Collect student learning metrics (attendance %, quiz scores, lab status)',
+      'Design prompt: Select feature indicators and normalize multi-source academic metrics',
+      'Connect AI: Score indicators against predicted outcome thresholds',
+      'Test output: Validate accuracy across historical semester batches and edge distributions',
+      'Prepare final project: Render student risk scorecards with targeted remedial advice',
+    ],
+    estimatedTime: '60-Minute Blueprint',
+    difficulty: 'Intermediate',
+    tags: ['Predictive ML', 'Student Success', 'Analytics'],
+    sampleInput: 'Student metrics: 82% Attendance, 74% Lab completion, 68% Midterm score.',
+    sampleOutput: 'Predicted Grade: B+ (Probability: 84%) | Action Area: Boost Lab submissions by +10% to secure Grade A threshold.'
+  },
+  {
+    id: 'sentiment-analyzer',
+    title: 'Sentiment / Emotion Analyzer',
+    tagline: 'NLP Feedback Classifier',
+    problem: 'Analyze student feedback from campus forums and identify trending sentiment patterns in real time.',
+    targetOutcome: 'A live feedback classifier categorizing sentiment polarity and emotional tone.',
+    aiComponent: 'NLP text classification, token extraction, and sentiment polarity analysis.',
+    journey: [
+      'Define input: Collect anonymous student feedback strings and forum comments',
+      'Design prompt: Define multi-class sentiment taxonomies (Positive, Constructive, Critical)',
+      'Connect AI: Process text inputs through sentiment evaluation layer',
+      'Test output: Test colloquial campus slang, nuance, and sarcastic phrasing',
+      'Prepare final project: Generate aggregate campus happiness scores and topic tags',
+    ],
+    estimatedTime: '60-Minute Blueprint',
+    difficulty: 'Beginner Friendly',
+    tags: ['NLP', 'Sentiment Classification', 'Text Analytics'],
+    sampleInput: 'Feedback: "The hands-on build session was fast-paced but building the project in 60 mins was super rewarding!"',
+    sampleOutput: 'Sentiment: Positive (94% confidence) | Emotions: Enthusiastic, Productive | Key Theme: Hands-on learning speed.'
+  }
+];

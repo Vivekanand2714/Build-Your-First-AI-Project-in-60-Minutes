@@ -76,13 +76,13 @@ export const LandingPage: React.FC = () => {
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 
-                <a
-                  href="#how-it-works"
+                <Link
+                  to="/playground"
                   className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-800 font-semibold px-6 py-3.5 rounded-xl text-sm border border-slate-200 transition shadow-2xs"
                 >
-                  <span>See How It Works</span>
-                  <ArrowDown className="w-4 h-4 text-slate-400" />
-                </a>
+                  <Cpu className="w-4 h-4 text-emerald-600" />
+                  <span>AI Project Playground</span>
+                </Link>
               </div>
 
               {/* Social Proof Counter */}

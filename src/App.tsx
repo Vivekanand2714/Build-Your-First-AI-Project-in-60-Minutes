@@ -10,6 +10,10 @@ import { SuccessPage } from './pages/SuccessPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { AdminPage } from './pages/AdminPage';
+import { PlaygroundPage } from './pages/PlaygroundPage';
+import { CampusChallengePage } from './pages/CampusChallengePage';
+import { WhatsAppFlowPage } from './pages/WhatsAppFlowPage';
+import { WorkshopPage } from './pages/WorkshopPage';
 
 export const App: React.FC = () => {
   return (
@@ -28,6 +32,10 @@ export const App: React.FC = () => {
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/leaderboard" element={<LeaderboardPage />} />
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/playground" element={<PlaygroundPage />} />
+              <Route path="/campus-challenge" element={<CampusChallengePage />} />
+              <Route path="/whatsapp-flow" element={<WhatsAppFlowPage />} />
+              <Route path="/workshop" element={<WorkshopPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>

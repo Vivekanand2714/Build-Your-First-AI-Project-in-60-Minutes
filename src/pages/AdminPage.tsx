@@ -3,12 +3,12 @@ import { useGrowth } from '../context/GrowthContext';
 import { 
   BarChart3, Users, Share2, TrendingUp, Sparkles, School, 
   MessageCircle, ExternalLink, Copy, Check, RefreshCw, Zap, ArrowUpRight, 
-  CheckCircle2, Filter, Layers, Radio, Settings, UserCheck
+  CheckCircle2, Filter, Layers, Radio, Settings, UserCheck, Target, ArrowDown, Award
 } from 'lucide-react';
 import { AcquisitionChannel } from '../types';
 
 export const AdminPage: React.FC = () => {
-  const { students, currentStudent, setCurrentStudentId, metrics, simulateReferral, resetDemoData } = useGrowth();
+  const { students, currentStudent, setCurrentStudentId, metrics, simulateReferral, resetDemoData, getCampusLeaderboard } = useGrowth();
   
   const [copiedLink, setCopiedLink] = useState<string | null>(null);
   const [campaignSource, setCampaignSource] = useState<AcquisitionChannel>('whatsapp');
@@ -87,6 +87,18 @@ export const AdminPage: React.FC = () => {
     { key: 'outreach', label: 'Targeted Outreach', desc: 'Departmental notices & emails', color: 'bg-amber-500' },
     { key: 'direct', label: 'Direct Organic', desc: 'Direct visits without tags', color: 'bg-slate-400' },
   ];
+
+  // Campus Performance & Funnel Data
+  const campusLeaderboard = getCampusLeaderboard();
+  const registrationGoal = 50;
+  const goalProgress = Math.min(100, Math.round((metrics.totalRegistrations / registrationGoal) * 100));
+
+  const funnelVisitors = Math.round(metrics.totalRegistrations * 3.8);
+  const funnelRegistrations = metrics.totalRegistrations;
+  const funnelReferrals = metrics.referralRegistrations;
+  const funnelStarts = Math.max(1, Math.round(metrics.totalRegistrations * 0.72));
+  const funnelCompletions = Math.max(1, Math.round(metrics.totalRegistrations * 0.52));
+  const activeCollegesCount = Math.max(6, Object.keys(metrics.collegeBreakdown).length);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] py-10 px-4 sm:px-6 lg:px-8">
@@ -202,63 +214,243 @@ export const AdminPage: React.FC = () => {
           </div>
         )}
 
-        {/* 4 CORE KPI CARDS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* 5 CORE KPI CARDS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           
-          {/* KPI 1: Total Registrations */}
+          {/* KPI 1: Registration Goal */}
           <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
             <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-              <span>Total Registrations</span>
+              <span>Registration Goal</span>
+              <Target className="w-4 h-4 text-emerald-600" />
+            </div>
+            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-mono">
+              {metrics.totalRegistrations} <span className="text-xs font-normal text-slate-400 font-sans">/ {registrationGoal}</span>
+            </div>
+            <div className="mt-3 flex items-center gap-1.5 text-[11px] text-slate-500">
+              <span className="font-semibold text-emerald-600">{goalProgress}%</span>
+              <span>of cohort goal</span>
+            </div>
+          </div>
+
+          {/* KPI 2: Current Registrations */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+            <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+              <span>Current Registrations</span>
               <Users className="w-4 h-4 text-emerald-600" />
             </div>
-            <div className="text-3xl font-extrabold text-slate-900 font-mono">
+            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-mono">
               {metrics.totalRegistrations}
             </div>
             <div className="mt-3 flex items-center gap-1 text-[11px] text-slate-500">
               <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Simulated demo registrations</span>
+              <span>Simulated demo records</span>
             </div>
           </div>
 
-          {/* KPI 2: Referral Registrations */}
+          {/* KPI 3: Referral Rate */}
           <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
             <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-              <span>Referral Registrations</span>
+              <span>Referral Rate</span>
               <Share2 className="w-4 h-4 text-emerald-600" />
             </div>
-            <div className="text-3xl font-extrabold text-emerald-600 font-mono">
-              {metrics.referralRegistrations}
-            </div>
-            <div className="mt-3 flex items-center gap-1 text-[11px] text-slate-500">
-              <span>Driven by classmate referral links</span>
-            </div>
-          </div>
-
-          {/* KPI 3: Active Referrers */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
-            <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-              <span>Active Referrers</span>
-              <Sparkles className="w-4 h-4 text-amber-500" />
-            </div>
-            <div className="text-3xl font-extrabold text-slate-900 font-mono">
-              {metrics.activeReferrers}
-            </div>
-            <div className="mt-3 flex items-center gap-1 text-[11px] text-slate-500">
-              <span>Students who referred &ge; 1 classmate</span>
-            </div>
-          </div>
-
-          {/* KPI 4: Simulated Referral Rate (%) */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
-            <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-              <span>Simulated Referral Rate</span>
-              <TrendingUp className="w-4 h-4 text-emerald-600" />
-            </div>
-            <div className="text-3xl font-extrabold text-emerald-600 font-mono">
+            <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 font-mono">
               {metrics.referralRate}%
             </div>
             <div className="mt-3 flex items-center gap-1 text-[11px] text-slate-500">
-              <span>Referral registrations ratio</span>
+              <span>Peer-driven percentage</span>
+            </div>
+          </div>
+
+          {/* KPI 4: Campus Invites */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+            <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+              <span>Campus Invites</span>
+              <Sparkles className="w-4 h-4 text-amber-500" />
+            </div>
+            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-mono">
+              {metrics.referralRegistrations}
+            </div>
+            <div className="mt-3 flex items-center gap-1 text-[11px] text-slate-500">
+              <span>Classmate referrals logged</span>
+            </div>
+          </div>
+
+          {/* KPI 5: Active Colleges */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+            <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+              <span>Active Colleges</span>
+              <School className="w-4 h-4 text-emerald-600" />
+            </div>
+            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-mono">
+              {activeCollegesCount}
+            </div>
+            <div className="mt-3 flex items-center gap-1 text-[11px] text-slate-500">
+              <span>Engineering institutions</span>
+            </div>
+          </div>
+
+        </div>
+
+        {/* CAMPUS PERFORMANCE & GROWTH FUNNEL GRID */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* Section: Campus Performance (7 cols) */}
+          <div className="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-6 sm:p-7 shadow-xs space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <School className="w-4 h-4 text-emerald-600" />
+                  <span>Campus Performance</span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Inter-college community standings & registration pace (Simulated Dataset)
+                </p>
+              </div>
+              <span className="text-[11px] font-mono bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md border border-slate-200">
+                6 Campuses
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              {campusLeaderboard.map((camp) => (
+                <div key={camp.name} className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span className={`w-6 h-6 rounded-md font-mono font-bold flex items-center justify-center text-[11px] ${
+                        camp.rank === 1 ? 'bg-amber-100 text-amber-800' : 'bg-slate-200 text-slate-700'
+                      }`}>
+                        #{camp.rank}
+                      </span>
+                      <span className="font-semibold text-slate-900 truncate">
+                        {camp.name}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-3 shrink-0">
+                      <span className="font-mono font-extrabold text-slate-900 text-sm">
+                        {camp.count}
+                      </span>
+                      <span className="text-[10px] text-slate-400">builders</span>
+                    </div>
+                  </div>
+
+                  <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-slate-200">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        camp.rank === 1 ? 'bg-emerald-600' : 'bg-emerald-500'
+                      }`}
+                      style={{ width: `${camp.percent}%` }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Section: Growth Funnel (5 cols) */}
+          <div className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-6 sm:p-7 shadow-xs space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-emerald-600" />
+                  <span>Growth Funnel</span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Visitor to workshop completion lifecycle drop-off (Simulated)
+                </p>
+              </div>
+              <span className="text-[11px] font-mono bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200 font-semibold">
+                Conversion
+              </span>
+            </div>
+
+            {/* Funnel Steps */}
+            <div className="space-y-2.5">
+              
+              {/* Step 1: Visitors */}
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+                <div>
+                  <div className="text-[10px] uppercase font-mono text-slate-400">Top of Funnel</div>
+                  <div className="text-xs font-bold text-slate-800">1. Visitors</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-mono font-bold text-slate-900 text-sm">{funnelVisitors}</div>
+                  <div className="text-[10px] text-slate-400">100% baseline</div>
+                </div>
+              </div>
+
+              <div className="flex justify-center text-slate-300 -my-1">
+                <ArrowDown className="w-3.5 h-3.5 text-slate-400" />
+              </div>
+
+              {/* Step 2: Registrations */}
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+                <div>
+                  <div className="text-[10px] uppercase font-mono text-slate-400">Lead Conversion</div>
+                  <div className="text-xs font-bold text-slate-800">2. Registrations</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-mono font-bold text-emerald-600 text-sm">{funnelRegistrations}</div>
+                  <div className="text-[10px] text-emerald-700 font-semibold">
+                    {Math.round((funnelRegistrations / funnelVisitors) * 100)}% visitor rate
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-center text-slate-300 -my-1">
+                <ArrowDown className="w-3.5 h-3.5 text-slate-400" />
+              </div>
+
+              {/* Step 3: Referrals */}
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+                <div>
+                  <div className="text-[10px] uppercase font-mono text-slate-400">Viral Loop</div>
+                  <div className="text-xs font-bold text-slate-800">3. Referrals</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-mono font-bold text-emerald-600 text-sm">{funnelReferrals}</div>
+                  <div className="text-[10px] text-emerald-700 font-semibold">
+                    {metrics.referralRate}% referral share
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-center text-slate-300 -my-1">
+                <ArrowDown className="w-3.5 h-3.5 text-slate-400" />
+              </div>
+
+              {/* Step 4: Workshop Starts */}
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+                <div>
+                  <div className="text-[10px] uppercase font-mono text-slate-400">Attendance</div>
+                  <div className="text-xs font-bold text-slate-800">4. Workshop Starts</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-mono font-bold text-slate-900 text-sm">{funnelStarts}</div>
+                  <div className="text-[10px] text-slate-500">
+                    {Math.round((funnelStarts / funnelRegistrations) * 100)}% show-up rate
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-center text-slate-300 -my-1">
+                <ArrowDown className="w-3.5 h-3.5 text-slate-400" />
+              </div>
+
+              {/* Step 5: Workshop Completions */}
+              <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 flex items-center justify-between">
+                <div>
+                  <div className="text-[10px] uppercase font-mono text-emerald-700">Project Built</div>
+                  <div className="text-xs font-bold text-emerald-900">5. Workshop Completions</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-mono font-bold text-emerald-700 text-sm">{funnelCompletions}</div>
+                  <div className="text-[10px] text-emerald-800 font-semibold">
+                    {Math.round((funnelCompletions / funnelStarts) * 100)}% completion rate
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
 

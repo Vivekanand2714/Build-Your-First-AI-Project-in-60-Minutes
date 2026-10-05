@@ -154,27 +154,38 @@ export const DemoControlsModal: React.FC = () => {
               </button>
             </div>
 
-            {/* Link to 3-Minute Video Presentation Studio */}
-            <div className="p-3 bg-slate-900 text-white rounded-xl flex items-center justify-between">
-              <div>
-                <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                  <span>🎬 3-Min Video Presentation</span>
-                  <span className="bg-emerald-500/20 text-emerald-400 text-[10px] px-1.5 py-0.2 rounded font-mono">
-                    180s Studio
+            {/* Link to 3-Minute Video Presentation Studio & MP4 Download */}
+            <div className="p-3 bg-slate-900 text-white rounded-xl space-y-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                    <span>🎬 3-Min Video Presentation</span>
+                    <span className="bg-emerald-500/20 text-emerald-400 text-[10px] px-1.5 py-0.2 rounded font-mono">
+                      1080p MP4
+                    </span>
                   </span>
-                </span>
-                <p className="text-[11px] text-slate-300 mt-0.5">
-                  Automated walkthrough with live screens, voiceover & recording.
-                </p>
+                  <p className="text-[11px] text-slate-300 mt-0.5">
+                    Automated candidate walkthrough with live screens, voiceover & metrics.
+                  </p>
+                </div>
               </div>
-              <a
-                href="/presentation"
-                onClick={() => setIsOpen(false)}
-                className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 shrink-0 ml-2"
-              >
-                <span>Launch</span>
-                <span>&rarr;</span>
-              </a>
+              <div className="flex items-center gap-2 pt-1">
+                <a
+                  href="/presentation"
+                  onClick={() => setIsOpen(false)}
+                  className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-100 text-center py-1.5 rounded-lg text-xs font-semibold border border-slate-700 transition"
+                >
+                  Interactive Studio
+                </a>
+                <a
+                  href="/presentation_video_3min.mp4"
+                  download="Build_Your_First_AI_Project_in_60_Minutes_Presentation.mp4"
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-center py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1 shadow-xs"
+                >
+                  <span>Download MP4</span>
+                  <span className="text-[10px] text-emerald-200">(9.4 MB)</span>
+                </a>
+              </div>
             </div>
 
             {/* Control 3: Reset Demo Data */}

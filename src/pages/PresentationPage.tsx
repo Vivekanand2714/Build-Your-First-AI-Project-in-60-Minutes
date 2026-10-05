@@ -544,17 +544,6 @@ export const PresentationPage: React.FC = () => {
             </button>
           )}
 
-          {/* Download Pre-rendered Full HD MP4 Video */}
-          <a
-            href="/presentation_video_3min.mp4"
-            download="Build_Your_First_AI_Project_in_60_Minutes_Presentation.mp4"
-            className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold shadow-md transition"
-            title="Download the complete 3-minute 1080p MP4 presentation video file (9.4 MB)"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Download Video</span>
-            <span className="font-mono text-[11px] bg-emerald-700/60 px-1 py-0.2 rounded">.mp4</span>
-          </a>
 
           {/* Download Recorded WebM Video if custom recorded */}
           {recordedBlobUrl && (

@@ -82,16 +82,7 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Right Action CTA */}
-          <div className="hidden lg:flex items-center gap-2 xl:gap-3">
-            <Link
-              to="/presentation"
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition border border-slate-200 shadow-2xs group"
-              title="Watch 3-minute video presentation studio"
-            >
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>🎬 3-Min Video</span>
-            </Link>
-
+          <div className="hidden lg:flex items-center gap-3">
             {currentStudent ? (
               <div className="flex items-center gap-2">
                 <Link
@@ -152,15 +143,7 @@ export const Navbar: React.FC = () => {
             </Link>
           ))}
 
-          <div className="pt-3 border-t border-slate-100 space-y-2">
-            <Link
-              to="/presentation"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 w-full bg-slate-900 text-white font-semibold px-4 py-2.5 rounded-xl text-sm shadow-xs"
-            >
-              <span>🎬 3-Min Video Presentation</span>
-            </Link>
-
+          <div className="pt-3 border-t border-slate-100">
             {currentStudent ? (
               <div className="space-y-2">
                 <Link

@@ -154,6 +154,29 @@ export const DemoControlsModal: React.FC = () => {
               </button>
             </div>
 
+            {/* Link to 3-Minute Video Presentation Studio */}
+            <div className="p-3 bg-slate-900 text-white rounded-xl flex items-center justify-between">
+              <div>
+                <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                  <span>🎬 3-Min Video Presentation</span>
+                  <span className="bg-emerald-500/20 text-emerald-400 text-[10px] px-1.5 py-0.2 rounded font-mono">
+                    180s Studio
+                  </span>
+                </span>
+                <p className="text-[11px] text-slate-300 mt-0.5">
+                  Automated walkthrough with live screens, voiceover & recording.
+                </p>
+              </div>
+              <a
+                href="/presentation"
+                onClick={() => setIsOpen(false)}
+                className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 shrink-0 ml-2"
+              >
+                <span>Launch</span>
+                <span>&rarr;</span>
+              </a>
+            </div>
+
             {/* Control 3: Reset Demo Data */}
             <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
               <div className="text-slate-500 text-[11px]">
